@@ -13,8 +13,11 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
 			}
 
+		// init local variables
 		int res = -1;
     int listenPort = 1234;
+
+		// look for input arguments by the user 
     if (argc > 1)
 			listenPort = atoi(argv[1]);
 
@@ -22,10 +25,16 @@ int main(int argc, char *argv[])
 		auto sock = ged::Socket::Create(true);
     sock->init();
 		sock->Bind("", listenPort);
+
+		// accept new client connections
 		auto handler = sock->Accept();
+
+		// Send message
 		const char request[] = "Hello!\r\n";
     int requestLen = (int)strlen(request);
 		res = handler->Write(request, requestLen);
+
+		// recieve message
 		const int bufferLen = 1023;
     char buffer[bufferLen + 1];
     res = handler->Read(buffer, bufferLen);

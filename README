@@ -1,0 +1,47 @@
+=== GED C++ coding challenge ===
+
+This code is a working server/client application implemented in C++. After the server is started
+it waits for the client to connect. The client then waits for a message from the server and
+followed by a message back to the server.
+
+Currently, the client and server are coded in a very procedural style. We rather would like to see
+object oriented code. Hence, the tasks of this challenge are as follows:
+
+ a. Try to compile the code (Client.cpp and Server.cpp) - either with the Makefile provided or
+    however is most convenient for you. Then try and run the server/client application and
+    record the output.
+ 
+ b. Implement a class wrapper (Socket.h/Socket.cpp) for the TCP socket and use it instead of
+    the procedural code in Server.cpp and Client.cpp to obtain exactly the same
+    behaviour and output as the original application
+    
+ c. (Bonus) Implement a C++ wrapper for both a TCP and UDP socket so it satisfies the factory pattern
+    class relationship as shown in the UML sketch below. Then implement the static Create() method
+    of the Socket class (e.g. "Socket *Socket::Create(bool isTcp)") to return either an instance of
+    a TcpSocket or UdpSocket depending on the value of the input parameter.
+    Finally, add this new functionality to the server/client example to be able to send messages between
+    the client and server either over TCP or UDP (one-line change in Client.cpp and Server.cpp from task b).
+    
+    Legend:
+       + ... public methods
+       a ... abstract (virtual) methods
+    
+                                ----------------
+                                |    Socket    |
+                                ----------------
+                                | + Create()   |
+                                | + Write()    |
+                                | + Read()     |
+                                | a Connect()  |
+                                | a Bind()     |
+                               /| a Accept()   |\
+                              / ---------------- \
+                             /                    \
+               ---------------                  --------------
+               |  TcpSocket  |                  |  UdpSocket |
+               ---------------                  --------------
+               | + Connect() |                  | + Connect()|
+               | + Bind()    |                  | + Bind()   |
+               | + Accept()  |                  | + Accept() |
+               ---------------                  --------------
+               

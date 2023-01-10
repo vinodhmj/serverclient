@@ -80,7 +80,7 @@ namespace ged {
 	
 		bool Connect(const char *ipAddr, short ipPort){return false;}
 		bool Bind(const char *ipAddr, short ipPort) {return false;}
-		std::unique_ptr<Socket> Accept() { std::unique_ptr<Socket> derived(new UDPSocket); return derived;}
+		std::unique_ptr<Socket> Accept() { return nullptr; }
 	}; // End of class UDPSocket
 } // ged
 #endif /* SOCKET_GED_H */

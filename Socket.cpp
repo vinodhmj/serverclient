@@ -1,8 +1,32 @@
-#include "Socket.hpp"
-#include <stdexcept>
-namespace ged
-{    
+/**
+ * This source file contains the implementation for the abstract base class
+ Socket and its children TCPSocket and UDPSocket.
 
+ TODO: Implement concrete function for UDP type connection
+ */
+
+#include <iostream>
+#include <stdexcept>
+#include <string.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <arpa/inet.h>
+
+#include "Socket.hpp"
+
+namespace ged
+{
+/**
+ *  \brief Factory Pattern Create for Sockets
+ *
+ *  use the inArg to select the type of connection
+ *
+ *  \param isTCP default TCP type
+ *  \return unique pointer of Socket base class
+ */
 std::unique_ptr<Socket> Socket::Create(bool isTCP) {
 	if(isTCP)
 		{
@@ -18,9 +42,18 @@ std::unique_ptr<Socket> Socket::Create(bool isTCP) {
 
 Socket::~Socket()
 {
+	// Release the resource after use or when going out of scope
 	close(socketHandler);
 }
-	
+
+/**
+ *  \brief initialize the Socket by acquiring the resource
+ *
+ *  
+ *
+ *  \param param
+ *  \return status bool
+ */	
 bool Socket::init(void) {
     int res= socket(AF_INET, type, 0);
     if (res < 0)
@@ -31,6 +64,14 @@ bool Socket::init(void) {
 		return true;
 }
 
+/**
+ *  \brief Wrapper for socket write
+ *
+ *  Detailed description
+ *
+ *  \param param
+ *  \return return type
+ */	
 int	Socket::Write(const char *request, int requestLen)
 {
 	int res = write(socketHandler, request, requestLen);
@@ -41,6 +82,14 @@ int	Socket::Write(const char *request, int requestLen)
 	return res;
 }
 
+/**
+ *  \brief Wrapper for socket read
+ *
+ *  Detailed description
+ *
+ *  \param param
+ *  \return return type
+ */	
 int Socket::Read(char *buffer, int bufferLen)
 	{
     int res = read(socketHandler, buffer, bufferLen);
@@ -51,13 +100,21 @@ int Socket::Read(char *buffer, int bufferLen)
 
 		return res;
 }
-	
+
 void Socket::setSocketHandler(int newHandler)
 {
 	close(socketHandler);
 	socketHandler = newHandler;
 }
-	
+
+/**
+ *  \brief Wrapper for socket bind
+ *
+ * Used only in Server call
+ *
+ *  \param ipAddr is only used on need basis, ususally ignored
+ *  \return return type
+ */
 bool TCPSocket::Bind(const char *ipAddr, short listenPort)
 {
 	// Fill in the address structure containing self address
@@ -89,6 +146,14 @@ bool TCPSocket::Bind(const char *ipAddr, short listenPort)
 	return true;
 }
 
+/**
+ *  \brief Wrapper for socket accept
+ *
+ *  Detailed description
+ *
+ *  \param param
+ *  \return return type
+ */	
 std::unique_ptr<Socket> TCPSocket::Accept()
 {
 	std::cout << "Waiting for client..." << std::endl;
@@ -116,12 +181,16 @@ std::unique_ptr<Socket> TCPSocket::Accept()
               << " Port "
               << ntohs(clientAddr.sin_port)
 			  << std::endl;
- 
-		close(socketHandler);    // Close the listen socket
 
-		return sNew;
+    return sNew;
 }
 
+/**
+ *  \brief Wrapper for socket connect
+ *
+ *  Only used from Client side
+ *
+ */
 bool TCPSocket::Connect(const char *serverAddr, short serverPort)
 {
 	// Fill in server IP address

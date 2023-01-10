@@ -14,8 +14,8 @@ Server: Server.o Socket.o
 Client: Client.o Socket.o
 	$(CC) -Wall -O0 -g -o $@ $^
 
-test: test.o Socket.o
-	$(CC) -Wall -O0 -g -o $@ $^
+#test: test.o Socket.o						#
+#$(CC) -Wall -O0 -g -o $@ $^
 
 all: Server Client test
 	

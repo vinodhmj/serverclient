@@ -1,3 +1,6 @@
+#include <iostream>
+#include <string.h>
+
 #include "Socket.hpp"
 
 static void usage();
@@ -12,12 +15,15 @@ int main(int argc, const char *argv[])
 					return EXIT_FAILURE;
 				}
 
+			// init local variables
 			int res = -1;
 			const char* serverAddr = "127.0.0.1";
+			short serverPort = 1234;
+			
+			// look for input arguments by the user 
 			if (argc > 1)
         serverAddr = argv[1];
 
-			short serverPort = 1234;
 			if (argc >= 3)
         serverPort = (short) atoi(argv[2]);
 
@@ -32,15 +38,19 @@ int main(int argc, const char *argv[])
 								<< static_cast<int>(serverPort)
 								<< std::endl;
 
+			// Connect to the server
 			sock->Connect(serverAddr, serverPort);
 			std::cout << "Connected. Reading a server message" << std::endl;
+
+			// Read from server
 			const int bufferLen = 1023;
 			char buffer[bufferLen + 1];
 			res = sock->Read(buffer, bufferLen);
 
 			buffer[res] = 0;
 			std::cout << "Received:" << std::endl << buffer << std::endl;
- 
+
+			// Write to server
 			const char reply[] = "Thanks! Bye-bye...\r\n";
 			int replyLen = (int)strlen(reply);
 			res = sock->Write(reply, replyLen);
@@ -52,7 +62,6 @@ int main(int argc, const char *argv[])
 		return EXIT_FAILURE;
 	}
 }
-
 
 static void usage()
 {

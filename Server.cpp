@@ -1,21 +1,22 @@
-#include "Socket.hpp"
-#include <exception>
+#include <iostream>
+#include <string.h>
 
-static void usage();
+#include "Socket.hpp"
+    static void usage();
 
 int main(int argc, char *argv[])
 {
 	try {
     if (argc > 1 && *(argv[1]) == '-')
-    {
+			{
         usage();
         return EXIT_FAILURE;
-    }
+			}
 
 		int res = -1;
     int listenPort = 1234;
     if (argc > 1)
-        listenPort = atoi(argv[1]);
+			listenPort = atoi(argv[1]);
 
 		// Create a TCP socket
 		auto sock = ged::Socket::Create(true);
@@ -34,18 +35,18 @@ int main(int argc, char *argv[])
 
     return EXIT_SUCCESS;
 
-        } catch (std::exception& ex) {
+	} catch (std::exception& ex) {
 		std::cerr << ex.what() << std::endl;
-        return EXIT_FAILURE;
+		return EXIT_FAILURE;
 	}
 } // end of main
 
 static void usage() {
-    std::cout << "A simple Internet server application.\n"
-              << "It listens to the port written in command line (default 1234),\n"
-              << "accepts a connection, and sends the \"Hello!\" message to a client.\n"
-              << "Then it receives the answer from a client and terminates.\n\n"
-              << "Usage:\n"
-              << "     server [port_to_listen]\n"
-              << "Default is the port 1234.\n";
+	std::cout << "A simple Internet server application.\n"
+						<< "It listens to the port written in command line (default 1234),\n"
+						<< "accepts a connection, and sends the \"Hello!\" message to a client.\n"
+						<< "Then it receives the answer from a client and terminates.\n\n"
+						<< "Usage:\n"
+						<< "     server [port_to_listen]\n"
+						<< "Default is the port 1234.\n";
 }

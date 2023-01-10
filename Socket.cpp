@@ -89,10 +89,6 @@ bool TCPSocket::Bind(const char *ipAddr, short listenPort)
 	return true;
 }
 
-bool TCPSocket::Connect(const char *ipAddr, short ipPort)
-{
-	return false;
-}
 std::unique_ptr<Socket> TCPSocket::Accept()
 {
 	std::cout << "Waiting for client..." << std::endl;
@@ -124,6 +120,24 @@ std::unique_ptr<Socket> TCPSocket::Accept()
 		close(socketHandler);    // Close the listen socket
 
 		return sNew;
+}
+
+bool TCPSocket::Connect(const char *serverAddr, short serverPort)
+{
+	// Fill in server IP address
+	struct sockaddr_in serverAddrIn;
+	serverAddrIn.sin_family = AF_INET;
+	inet_pton(AF_INET, serverAddr, &serverAddrIn.sin_addr);
+	serverAddrIn.sin_port = htons(serverPort);
+
+	// Connect to the remote server
+	int res = connect(socketHandler, (struct sockaddr*) &serverAddrIn, sizeof(serverAddrIn));
+	if (res < 0)
+    {
+      throw std::runtime_error("Error connecting to server - " + std::string(strerror(errno)));
+    }
+
+	return true;
 }
 
 
